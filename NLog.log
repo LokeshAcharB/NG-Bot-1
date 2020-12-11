@@ -1,0 +1,2 @@
+
+|2020-12-11 14:13:12.8219|INFO|PresentationLayer.StartingUserInterface|StartingUserInterface.CommandLoop => StartingUserInterface.HaveQuery => StartingUserInterface.SubCommandLoop||Provide right key to navigate ur'self (1-> Employee Site, 2-> Project Site, 0-> exit)!
