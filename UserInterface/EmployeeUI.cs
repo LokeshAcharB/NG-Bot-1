@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Linq;
 using System.Xml.Linq;
-using NLog;
 
-namespace PresentationLayer
+namespace UserInterface
 {
     public class EmployeeUI : IUserInterface
     {
@@ -19,7 +19,7 @@ namespace PresentationLayer
         SubMenu:
             SubMenu();
         AgainEnterKey:
-            
+
             var key = Console.ReadLine().Trim();
             var result = ValidatingKeys.IsValidKey(key);
             if (result.Item1 && result.Item2 >= 0 && result.Item2 < 5)
@@ -28,7 +28,7 @@ namespace PresentationLayer
                 switch (result.Item2)
                 {
                     case 1:
-                        Status = _viewer.AskNewEmployeeDetails();
+                        Status = _viewer.AskNewEmployeeDetails(ProjectName);
                         Check(Status);
                         goto SubMenu;
                     case 2:
@@ -55,8 +55,7 @@ namespace PresentationLayer
         }
         private void SubMenu()
         {
-            const string Uri = @"C:\Users\DN5W\Documents\Visual Studio 2017\Projects\NG-Bot\UserInterface\Indexes.xml";
-            var Option = (from index in XDocument.Load(Uri).Descendants("Index")
+            var Option = (from index in XDocument.Load("./Others/Indexes.xml").Descendants("Index")
                           where index.Attribute("level").Value == "EmployeeIndex"
                           select new
                           {

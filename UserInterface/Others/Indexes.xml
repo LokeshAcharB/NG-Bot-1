@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Indexes>
+  <Index level="MainIndex">
+    <Query>1 -> Have any query?</Query>
+    <Show>2 -> View all NG teams</Show>
+    <Exit>0 -> Exit</Exit>
+  </Index>
+  <Index level="SubIndex">
+    <Ask>>>Press the right key to navigate your self :</Ask>
+    <Employee>1 -> Employee Site</Employee>
+    <Project>2 -> Project Site</Project>
+    <Back>0 -> Go Back\nKey : </Back>
+  </Index>
+  <Index level="EmployeeIndex">
+    <Ask>>> What would you like to do:</Ask>
+    <Create>1 -> Add a new employee to CFG team</Create>
+    <Delete>2 -> Remove an employee from CFG</Delete>
+    <Update>3 -> Modify team member details</Update>
+    <Read>4 -> View employee profile</Read>
+    <Back>0 -> Go Back\nKey : </Back>
+  </Index>
+  <Index level="ProjectIndex">
+    <Ask>>> What would you like to do:</Ask>
+    <NewQuery>1 -> New Query</NewQuery>
+    <Read>2 -> View Queries</Read>
+    <Update>3 -> Update Query</Update>
+    <Remove>4 -> Remove Query</Remove>
+    <NewProject>5 -> Add new project</NewProject>
+    <RemoveProject>6 -> Remove project</RemoveProject>
+    <Back>0 -> Go Back</Back>
+  </Index>
+</Indexes>

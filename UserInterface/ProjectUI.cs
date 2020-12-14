@@ -1,15 +1,14 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Linq;
 using System.Xml.Linq;
-using NLog;
 
-namespace PresentationLayer
+namespace UserInterface
 {
     public class ProjectUI : IUserInterface
     {
         private static Logger logger;
         private static IViewer _viewer;
-        private const string Path = @"C:\Users\DN5W\Documents\Visual Studio 2017\Projects\NG-Bot\UserInterface\Indexes.xml";
         public ProjectUI(IViewer viewer)
         {
             logger = LogManager.GetCurrentClassLogger();
@@ -63,8 +62,7 @@ namespace PresentationLayer
         }
         private void PrintProjectMenu()
         {
-            const string Uri = Path;
-            var Option = (from index in XDocument.Load(Uri).Descendants("Index")
+            var Option = (from index in XDocument.Load("./Others/Indexes.xml").Descendants("Index")
                           where index.Attribute("level").Value == "ProjectIndex"
                           select new
                           {

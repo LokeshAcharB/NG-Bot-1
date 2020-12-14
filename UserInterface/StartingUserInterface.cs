@@ -1,18 +1,17 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Unity;
 using NLog;
+using Unity;
 using Unity.Lifetime;
 
-namespace PresentationLayer
+namespace UserInterface
 {
     class StartingUserInterface
     {
         private readonly Logger logger;
         private readonly IUnityContainer container;
-        private const string Path = @"C:\Users\DN5W\Documents\Visual Studio 2017\Projects\NG-Bot\UserInterface\Indexes.xml";
-
         public StartingUserInterface()
         {
             logger = LogManager.GetCurrentClassLogger();
@@ -50,11 +49,10 @@ namespace PresentationLayer
         }
         private void PrintMainMenu()
         {
-            const string Uri = Path;
-            var Option = (from index in XDocument.Load(Uri).Descendants("Index")
+            var Option = (from index in XDocument.Load("./Others/Indexes.xml").Descendants("Index")
                           where index.Attribute("level").Value == "MainIndex"
                           select new
-                          { 
+                          {
                               Query = index.Element("Query").Value,
                               Show = index.Element("Show").Value,
                               Exit = index.Element("Exit").Value
@@ -111,8 +109,7 @@ namespace PresentationLayer
         }
         private void PrintSubMenu()
         {
-            const string Uri = Path;
-            var Option = (from index in XDocument.Load(Uri).Descendants("Index")
+            var Option = (from index in XDocument.Load("./Others/Indexes.xml").Descendants("Index")
                           where index.Attribute("level").Value == "SubIndex"
                           select new
                           {
@@ -125,4 +122,3 @@ namespace PresentationLayer
         }
     }
 }
-

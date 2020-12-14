@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PresentationLayer
+namespace UserInterface
 {
-    class ValidatingKeys
+    internal class ValidatingKeys
     {
         internal static Tuple<bool, int> IsValidKey(string key)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Linq;
 
-namespace PresentationLayer
+namespace UserInterface
 {
     static class Start
     {
@@ -11,7 +12,7 @@ namespace PresentationLayer
             Console.WriteLine("---------------------------------------------------------");
 
             Intro();
-            StartingUserInterface startingUserInterface = new StartingUserInterface();
+            var startingUserInterface = new StartingUserInterface();
             startingUserInterface.CommandLoop();
 
             Console.ForegroundColor = ConsoleColor.Green;

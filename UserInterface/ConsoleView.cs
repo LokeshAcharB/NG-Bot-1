@@ -1,11 +1,11 @@
 ﻿using System;
+using Unity;
+using Unity.Lifetime;
 using DataAccess;
 using BusinessLogic;
 using System.Collections.Generic;
-using Unity;
-using Unity.Lifetime;
 
-namespace PresentationLayer
+namespace UserInterface
 {
     public class ConsoleView : IViewer
     {
@@ -13,7 +13,6 @@ namespace PresentationLayer
         private readonly EmployeeValidator employeeValidator;
         public ConsoleView()
         {
-            
             IUnityContainer container = new UnityContainer();
             container.RegisterType<IEmployeeRepository, EmployeeRepository>(new ContainerControlledLifetimeManager());
             employeeValidator = container.Resolve<EmployeeValidator>();
@@ -21,7 +20,7 @@ namespace PresentationLayer
             projectValidator = container.Resolve<ProjectValidator>();
         }
         #region Employee Site
-        public bool AskNewEmployeeDetails()
+        public bool AskNewEmployeeDetails(string ProjectName)
         {
             Employee Employee = new Employee
             {
@@ -38,13 +37,7 @@ namespace PresentationLayer
             Employee.JobTitle = ValidatingKeys.AssigningJob();
             Employee.EmailID = "";
 
-            Console.Write(">>Assign him/her to the project : \nTeam Name & Project Name : ");
-            var project = new List<CFGApplication>
-            {
-                new CFGApplication() { Id = Guid.NewGuid(), TeamName = Console.ReadLine().Trim(), ProjectName = Console.ReadLine().Trim() }
-            };
-            Employee.CFGApplications = project;
-            return employeeValidator.ValidateToUpload(Employee);
+            return employeeValidator.ValidateToAdd(Employee, ProjectName);
         }
         public void AskEmployeePUID()
         {
@@ -68,9 +61,9 @@ namespace PresentationLayer
                 Console.WriteLine($"Name   : {Employee.FullName}");
                 Console.WriteLine($"PUID   : {Employee.PUID}");
                 Console.WriteLine($"e-Mail : {Employee.EmailID}\nUnder Application : ");
-                foreach (CFGApplication application in Employee.CFGApplications)
+                foreach (Project application in Employee.Projects)
                 {
-                    Console.WriteLine($"    {application.TeamName}-{application.ProjectName}");
+                    Console.WriteLine($"    {application.ProjectName}");
                 }
             }
         }
@@ -87,7 +80,7 @@ namespace PresentationLayer
             Employee.EmailID = "";
             bool Status = employeeValidator.ValidateToModify(PUID, Employee);
             return Status;
-        } 
+        }
         public bool RemoveEmployee()
         {
             Console.Write("Enter employee PUID to remove : ");
@@ -100,7 +93,7 @@ namespace PresentationLayer
         #region Project Site
         public void ViewNGteams()
         {
-            var NGteams =  projectValidator.ReadNGteams();
+            var NGteams = projectValidator.ReadNGteams();
             var number = 0;
             foreach (var Team in NGteams)
             {
@@ -112,21 +105,6 @@ namespace PresentationLayer
                     Console.WriteLine($"    - {Project.ProjectName}");
                 }
             }
-        }
-        public bool AskNewProjectDetails()
-        {
-            Console.Write("Under which Team : ");
-            string TeamName = Console.ReadLine().Trim();
-            Console.Write("Enter the new project name : ");
-            string projectName = Console.ReadLine();
-            return projectValidator.ValidateToInsertProject(TeamName, projectName);
-        }
-        public bool RemoveProject()
-        {
-            Console.Write("Enter the project name : ");
-            string ProjectName = Console.ReadLine().Trim();
-            bool Status = projectValidator.ValidateToRemoveProject(ProjectName);
-            return Status;
         }
         public bool AskNewQuery(string ProjectName)
         {
@@ -145,15 +123,10 @@ namespace PresentationLayer
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Congarts no Active Queries :)");
                 Console.ForegroundColor = ConsoleColor.White;
+                return;
             }
-            else if (Queries.Count >= 5)
-            {
-                projectValidator.ReadActiveQueriesForXLSheet(ProjectName);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"Check the Excel sheet with name '{ProjectName.ToUpper()} Queries.xlsx'");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            else
+            Console.Write(">> Would u prefer to see in Console or Excel sheet : ");
+            if (Console.ReadLine().Trim().ToLower().StartsWith("c"))
             {
                 int Querynumber = 0;
                 foreach (Query query in Queries)
@@ -175,7 +148,12 @@ namespace PresentationLayer
                         }
                     }
                 }
+                return;
             }
+            projectValidator.ReadActiveQueriesForXLSheet(ProjectName);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Check the Excel sheet with name '{ProjectName.ToUpper()} Queries.xlsx' in Downloads folder");
+            Console.ForegroundColor = ConsoleColor.White;
         }
         public bool ModifyQuery(string ProjectName)
         {
@@ -206,6 +184,21 @@ namespace PresentationLayer
                 return "0";
             }
             return Result;
+        }
+        public bool AskNewProjectDetails()
+        {
+            Console.Write("Under which Team : ");
+            string TeamName = Console.ReadLine().Trim();
+            Console.Write("Enter the new project name : ");
+            string projectName = Console.ReadLine();
+            return projectValidator.ValidateToInsertProject(TeamName, projectName);
+        }
+        public bool RemoveProject()
+        {
+            Console.Write("Enter the project name : ");
+            string ProjectName = Console.ReadLine().Trim();
+            bool Status = projectValidator.ValidateToRemoveProject(ProjectName);
+            return Status;
         }
         #endregion
     }
